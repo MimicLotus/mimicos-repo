@@ -94,6 +94,7 @@ jobs:
           repo-add -n -R mimicos.db.tar.zst *.pkg.tar.zst
 
           # Ensure .db and .files are real files for direct HTTP access
+          rm -f mimicos.db mimicos.files
           cp -f mimicos.db.tar.zst mimicos.db
           cp -f mimicos.files.tar.zst mimicos.files
 
