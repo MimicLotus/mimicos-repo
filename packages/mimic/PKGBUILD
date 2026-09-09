@@ -7,7 +7,7 @@ arch=('x86_64')
 url="https://github.com/MimicLotus/mimic-core"
 license=('GPL-3.0-or-later')
 depends=('glibc' 'gcc-libs' 'openssl' 'zstd')
-makedepends=('cargo' 'rust' 'git' 'openssl' 'pacman' 'zstd')
+makedepends=('cargo' 'rust' 'git' 'openssl' 'pacman' 'zstd' 'pkgconf')
 source=("git+https://github.com/MimicLotus/mimic-core.git")
 sha256sums=('SKIP')
 
@@ -17,9 +17,9 @@ prepare() {
 
 build() {
     cd "${srcdir}/mimic-core"
-    if [ ! -f "target/release/mimic" ] || [ ! -f "target/release/mimic-brain" ]; then
-        RUSTFLAGS="-C link-arg=-Wl,--no-as-needed -C link-arg=-lzstd" cargo build --release --locked --workspace
-    fi
+    export PKG_CONFIG_ALL_DYNAMIC=1
+    export ZSTD_SYS_USE_PKG_CONFIG=1
+    cargo build --release --locked --workspace
 }
 
 package_mimic() {
