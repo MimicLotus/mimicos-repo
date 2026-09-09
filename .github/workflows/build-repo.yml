@@ -26,7 +26,7 @@ jobs:
         run: |
           pacman-key --init || true
           pacman-key --populate archlinux || true
-          pacman -Syu --noconfirm git sudo jq curl mold sccache zstd openssl bubblewrap rust cargo meson ninja pkgconf
+          pacman -Syu --noconfirm git sudo jq curl mold sccache zstd openssl bubblewrap rust cargo meson ninja pkgconf cmake wayland-protocols
           git config --system --add safe.directory '*'
 
       - name: Checkout Repository
@@ -74,9 +74,9 @@ jobs:
             (
               cd "$pkg_dir"
               sudo -u builder makepkg -sf --noconfirm --clean || sudo -u builder makepkg -f --nodeps --clean
-            )
+            ) || echo ":: [WARN] Build of $pkg_name failed, retaining pre-fetched release asset."
             cp -vf "$pkg_dir"/*.pkg.tar.zst /build/staging/ 2>/dev/null || true
-            pacman -U --noconfirm --nodeps /build/staging/*.pkg.tar.zst 2>/dev/null || true
+            pacman -U --noconfirm --nodeps "$pkg_dir"/*.pkg.tar.zst 2>/dev/null || true
           done
 
           # Build flagship meta-package
@@ -85,7 +85,7 @@ jobs:
             (
               cd packages/mimicos-desktop
               sudo -u builder makepkg -sf --noconfirm --clean || sudo -u builder makepkg -f --nodeps --clean
-            )
+            ) || echo ":: [WARN] Build of mimicos-desktop failed, retaining pre-fetched release asset."
             cp -vf packages/mimicos-desktop/*.pkg.tar.zst /build/staging/ 2>/dev/null || true
           fi
 

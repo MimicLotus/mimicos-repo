@@ -14,8 +14,20 @@ depends=(
     'libqalculate'
     'libical'
     'jemalloc'
+    'wayland'
+    'tomlplusplus'
+    'md4c'
+    'libjxl'
+    'libwebp'
+    'libsndfile'
+    'libsodium'
+    'polkit'
+    'pipewire'
+    'wireplumber'
+    'libsecret'
+    'libepoxy'
 )
-makedepends=('meson' 'ninja' 'pkgconf' 'git' 'gcc')
+makedepends=('meson' 'ninja' 'pkgconf' 'git' 'gcc' 'wayland-protocols' 'cmake')
 provides=('noctalia-shell' 'noctalia')
 conflicts=('noctalia-shell' 'noctalia')
 source=("git+https://github.com/noctalia-dev/noctalia-shell.git")
