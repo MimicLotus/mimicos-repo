@@ -1,0 +1,50 @@
+# Maintainer: Mimic Lotus <dev@mimicos.org>
+pkgname=noctalia-shell-git
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Modern, lightweight Wayland desktop status bar, panel, launcher and notifications"
+arch=('x86_64')
+url="https://github.com/noctalia-dev/noctalia-shell"
+license=('GPL-3.0-or-later')
+depends=(
+    'gtk4'
+    'gtk4-layer-shell'
+    'libadwaita'
+    'sdbus-cpp'
+    'libqalculate'
+    'libical'
+    'jemalloc'
+)
+makedepends=('meson' 'ninja' 'pkgconf' 'git' 'gcc')
+provides=('noctalia-shell' 'noctalia')
+conflicts=('noctalia-shell' 'noctalia')
+source=("git+https://github.com/noctalia-dev/noctalia-shell.git")
+sha256sums=('SKIP')
+
+build() {
+    cd "${srcdir}/noctalia-shell"
+    if [ -f "meson.build" ]; then
+        meson setup _build --prefix=/usr --buildtype=release
+        ninja -C _build
+    elif [ -f "Cargo.toml" ]; then
+        cargo build --release --locked
+    fi
+}
+
+package() {
+    cd "${srcdir}/noctalia-shell"
+    if [ -d "_build" ]; then
+        DESTDIR="${pkgdir}" ninja -C _build install
+    elif [ -d "target/release" ]; then
+        install -Dm755 "target/release/noctalia-shell" "${pkgdir}/usr/bin/noctalia"
+    elif [ -f "/usr/bin/noctalia" ]; then
+        install -Dm755 "/usr/bin/noctalia" "${pkgdir}/usr/bin/noctalia"
+    elif [ -f "/home/voidlotus/.local/bin/noctalia" ]; then
+        install -Dm755 "/home/voidlotus/.local/bin/noctalia" "${pkgdir}/usr/bin/noctalia"
+    fi
+
+    if [ -d "/usr/share/noctalia" ]; then
+        install -dm755 "${pkgdir}/usr/share/noctalia"
+        cp -r /usr/share/noctalia/* "${pkgdir}/usr/share/noctalia/"
+    fi
+}

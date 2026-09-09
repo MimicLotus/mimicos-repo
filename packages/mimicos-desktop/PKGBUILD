@@ -1,0 +1,43 @@
+# Maintainer: Mimic Lotus <dev@mimicos.org>
+pkgname=mimicos-desktop
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="👑 Flagship Desktop Environment Meta-Package for MimicOS (Umbriel + Noctalia Shell)"
+arch=('any')
+url="https://github.com/MimicLotus/mimicos-repo"
+license=('GPL-3.0-or-later')
+depends=(
+    'mimic'
+    'umbriel'
+    'noctalia-shell'
+    'mimicos-desktop-settings'
+    'sddm'
+    'qt6-declarative'
+    'qt6-svg'
+    'xwayland-satellite'
+    'alacritty'
+    'wallust'
+    'fuzzel'
+    'pipewire'
+    'wireplumber'
+    'pipewire-pulse'
+    'pipewire-alsa'
+    'xdg-desktop-portal'
+    'xdg-desktop-portal-wlr'
+    'polkit'
+)
+source=()
+
+package() {
+    install -dm755 "${pkgdir}/usr/share/doc/mimicos-desktop"
+    cat << 'README' > "${pkgdir}/usr/share/doc/mimicos-desktop/README"
+MimicOS Flagship Desktop Environment
+====================================
+This meta-package pulls together the complete MimicOS Wayland desktop experience:
+- Compositor: Umbriel (scrolling Wayland compositor)
+- Desktop Shell: Noctalia Shell (panel, launcher, notifications, OSD)
+- Package Engine: Mimic & Mimic-Brain (hermetic builds, stability safeguards, AI mentor)
+- Core Terminal: Alacritty with dynamic Wallust theming
+- Session Manager: SDDM with Wayland support
+README
+}

@@ -1,0 +1,52 @@
+# Maintainer: Mimic Lotus <dev@mimicos.org>
+pkgname=umbriel-git
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Modern C++23 Wayland Scrolling Compositor with SceneFX Frosted Glass Blur"
+arch=('x86_64')
+url="https://github.com/noctalia-dev/umbriel"
+license=('GPL-3.0-or-later')
+depends=(
+    'wayland'
+    'wayland-protocols'
+    'wlroots0.20'
+    'libinput'
+    'libxkbcommon'
+    'pixman'
+    'seatd'
+    'tomlplusplus'
+    'scenefx'
+    'jemalloc'
+)
+makedepends=('meson' 'ninja' 'pkgconf' 'gcc' 'git')
+provides=('umbriel')
+conflicts=('umbriel')
+source=("git+https://github.com/noctalia-dev/umbriel.git")
+sha256sums=('SKIP')
+
+build() {
+    cd "${srcdir}/umbriel"
+    meson setup _build --prefix=/usr --buildtype=release -Db_lto=false
+    ninja -C _build
+}
+
+package() {
+    cd "${srcdir}/umbriel"
+    if [ -d "_build" ]; then
+        DESTDIR="${pkgdir}" ninja -C _build install
+    elif [ -f "/usr/bin/umbriel" ]; then
+        install -Dm755 "/usr/bin/umbriel" "${pkgdir}/usr/bin/umbriel"
+    elif [ -f "/usr/local/bin/umbriel" ]; then
+        install -Dm755 "/usr/local/bin/umbriel" "${pkgdir}/usr/bin/umbriel"
+    fi
+
+    install -dm755 "${pkgdir}/usr/share/wayland-sessions"
+    cat << 'SESSION' > "${pkgdir}/usr/share/wayland-sessions/umbriel.desktop"
+[Desktop Entry]
+Name=Umbriel
+Comment=Modern Wayland Scrolling Compositor
+Exec=/usr/bin/umbriel
+Type=Application
+DesktopNames=Umbriel
+SESSION
+}

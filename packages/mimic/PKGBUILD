@@ -1,0 +1,47 @@
+# Maintainer: Mimic Lotus <dev@mimicos.org>
+pkgbase=mimic
+pkgname=('mimic' 'mimic-brain')
+pkgver=4.0.0
+pkgrel=1
+arch=('x86_64')
+url="https://github.com/MimicLotus/mimic-core"
+license=('GPL-3.0-or-later')
+makedepends=('cargo' 'rust' 'git' 'openssl' 'libalpm')
+source=("git+https://github.com/MimicLotus/mimic-core.git")
+sha256sums=('SKIP')
+
+prepare() {
+    cd "${srcdir}/mimic-core"
+}
+
+build() {
+    cd "${srcdir}/mimic-core"
+    export RUSTFLAGS="-C target-cpu=native -C opt-level=3"
+    cargo build --release --locked --workspace
+}
+
+package_mimic() {
+    pkgdesc="👑 Unified Package Engine & Hermetic Builder for Arch Linux"
+    depends=('bubblewrap' 'sccache' 'mold' 'libalpm.so=16' 'openssl' 'glibc' 'gcc-libs')
+    provides=('aur-helper' 'makepkg')
+    conflicts=('mimic-git')
+
+    cd "${srcdir}/mimic-core"
+    install -Dm755 "target/release/mimic" "${pkgdir}/usr/bin/mimic"
+    ln -sf mimic "${pkgdir}/usr/bin/mimic-build"
+
+    install -dm1777 "${pkgdir}/var/cache/mimic/sccache"
+    install -dm755 "${pkgdir}/var/cache/mimic/pkg"
+}
+
+package_mimic-brain() {
+    pkgdesc="🧠 Dormant System Intelligence & Triage Mentor for Mimic"
+    depends=('glibc' 'gcc-libs' 'openssl')
+    provides=('mimic-brain')
+    conflicts=('mimic-brain-git')
+
+    cd "${srcdir}/mimic-core"
+    install -Dm755 "target/release/mimic-brain" "${pkgdir}/usr/bin/mimic-brain"
+    install -Dm644 "packaging/mimic-brain.socket" "${pkgdir}/usr/lib/systemd/system/mimic-brain.socket"
+    install -Dm644 "packaging/mimic-brain.service" "${pkgdir}/usr/lib/systemd/system/mimic-brain.service"
+}

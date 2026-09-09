@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=MimicOS
+Comment=Modern Wayland Scrolling Desktop Environment
+Exec=umbriel
+Type=Application
+DesktopNames=MimicOS;Umbriel

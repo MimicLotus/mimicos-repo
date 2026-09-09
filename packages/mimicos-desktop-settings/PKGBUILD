@@ -1,0 +1,32 @@
+# Maintainer: Mimic Lotus <dev@mimicos.org>
+pkgname=mimicos-desktop-settings
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Modular configurations, skel dotfiles, Wallust integration, and SDDM preset for MimicOS"
+arch=('any')
+url="https://github.com/MimicLotus/mimicos-repo"
+license=('GPL-3.0-or-later')
+depends=('alacritty' 'wallust')
+optdepends=(
+    'umbriel: Wayland scrolling compositor'
+    'noctalia-shell: Status bar and desktop shell'
+    'sddm: Display manager'
+)
+source=()
+
+package() {
+    cd "${startdir:-${srcdir}/..}" || exit 1
+
+    # 1. Install user skeleton configuration
+    install -dm755 "${pkgdir}/etc/skel/.config"
+    cp -r skel/.config/* "${pkgdir}/etc/skel/.config/"
+
+    # 2. Install Wayland session
+    install -Dm644 "system/mimicos.desktop" "${pkgdir}/usr/share/wayland-sessions/mimicos.desktop"
+
+    # 3. Install SDDM configuration
+    install -Dm644 "system/mimicos.conf" "${pkgdir}/usr/lib/sddm/sddm.conf.d/mimicos.conf"
+
+    # 4. Install theme apply utility
+    install -Dm755 "bin/mimicos-theme-apply" "${pkgdir}/usr/bin/mimicos-theme-apply"
+}

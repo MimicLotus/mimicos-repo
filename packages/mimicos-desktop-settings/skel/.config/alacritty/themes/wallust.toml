@@ -1,0 +1,42 @@
+# Wallust template - colors for Alacritty
+[colors.primary]
+background = '#000000'
+foreground = '#E2F2D8'
+
+[colors.cursor]
+text = '#000000'
+cursor = '#C7E7B3'
+
+[colors.selection]
+text = '#E2F2D8'
+background = '#81A46B'
+
+[colors.normal]
+black   = '#3A3D3B'
+red     = '#336C41'
+green   = '#81A46B'
+yellow  = '#81A46B'
+blue    = '#81A46B'
+magenta = '#81A46B'
+cyan    = '#81A46B'
+white   = '#CDE5BE'
+
+[colors.bright]
+black   = '#8FA085'
+red     = '#449057'
+green   = '#ACDB8F'
+yellow  = '#ACDB8F'
+blue    = '#ACDB8F'
+magenta = '#ACDB8F'
+cyan    = '#ACDB8F'
+white   = '#CDE5BE'
+
+[colors.dim]
+black   = '#3A3D3B'
+red     = '#336C41'
+green   = '#81A46B'
+yellow  = '#81A46B'
+blue    = '#81A46B'
+magenta = '#81A46B'
+cyan    = '#81A46B'
+white   = '#CDE5BE'

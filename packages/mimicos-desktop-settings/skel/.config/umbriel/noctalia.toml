@@ -1,0 +1,16 @@
+# Wallust template - colors for Umbriel window manager
+[colors]
+background = "#131614F0"
+text_primary = "#E2F2D8FF"
+text_muted = "#8FA085FF"
+accent_primary = "#81A46BFF"
+accent_secondary = "#81A46BFF"
+warning = "#81A46BFF"
+error = "#336C41FF"
+
+[appearance]
+border_focused = "#81A46BFF"
+border_unfocused = "#8FA085FF"
+scratchpad_border_focused = "#81A46BFF"
+scratchpad_border_unfocused = "#8FA08580"
+insert_hint_color = "#81A46B80"

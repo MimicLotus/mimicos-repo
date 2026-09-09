@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# 👑 mimicos-theme-apply: Dynamic wallpaper and palette switcher for MimicOS
+set -euo pipefail
+
+IMAGE="${1:-}"
+if [ -z "$IMAGE" ]; then
+    echo "Usage: mimicos-theme-apply <path-to-wallpaper>"
+    exit 1
+fi
+
+if [ ! -f "$IMAGE" ]; then
+    echo "Error: Image not found: $IMAGE"
+    exit 1
+fi
+
+echo ":: Applying dynamic theme for MimicOS from $IMAGE..."
+
+# 1. Run Wallust to re-theme Alacritty, Umbriel, Noctalia, etc.
+if command -v wallust &>/dev/null; then
+    wallust run "$IMAGE"
+fi
+
+# 2. Reload Noctalia theme if running
+if command -v noctalia &>/dev/null; then
+    noctalia msg theme-reload 2>/dev/null || true
+fi
+
+echo "✔ Theme and palette successfully applied."
