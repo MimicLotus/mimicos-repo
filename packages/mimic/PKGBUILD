@@ -26,7 +26,8 @@ package_mimic() {
     pkgdesc="👑 Unified Package Engine & Hermetic Builder for Arch Linux"
     depends=('bubblewrap' 'sccache' 'mold' 'libalpm.so=16' 'openssl' 'glibc' 'gcc-libs' 'zstd')
     provides=('aur-helper' 'makepkg')
-    conflicts=('mimic-git')
+    conflicts=('mimic-git' 'mimic-pkg')
+    replaces=('mimic-pkg')
 
     cd "${srcdir}/mimic-core"
     install -Dm755 "target/release/mimic" "${pkgdir}/usr/bin/mimic"
