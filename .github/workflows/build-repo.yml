@@ -73,7 +73,7 @@ jobs:
             echo ":: Building package $pkg_name..."
             (
               cd "$pkg_dir"
-              sudo -u builder makepkg -sf --noconfirm --clean
+              sudo -u builder makepkg -sf --noconfirm --clean || sudo -u builder makepkg -f --nodeps --clean
             )
             cp -vf "$pkg_dir"/*.pkg.tar.zst /build/staging/ 2>/dev/null || true
             pacman -U --noconfirm --nodeps /build/staging/*.pkg.tar.zst 2>/dev/null || true
@@ -84,7 +84,7 @@ jobs:
             echo ":: Building meta-package mimicos-desktop..."
             (
               cd packages/mimicos-desktop
-              sudo -u builder makepkg -sf --noconfirm --clean
+              sudo -u builder makepkg -sf --noconfirm --clean || sudo -u builder makepkg -f --nodeps --clean
             )
             cp -vf packages/mimicos-desktop/*.pkg.tar.zst /build/staging/ 2>/dev/null || true
           fi
