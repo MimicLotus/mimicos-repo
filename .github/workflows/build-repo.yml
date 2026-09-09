@@ -1,0 +1,106 @@
+name: Build and Publish MimicOS Repository
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/**'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    name: Build Packages & Update Repo
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:base-devel
+      options: --privileged
+
+    steps:
+      - name: Install Base Tooling
+        run: |
+          pacman-key --init || true
+          pacman-key --populate archlinux || true
+          pacman -Syu --noconfirm git sudo jq curl mold sccache zstd openssl bubblewrap rust cargo meson ninja pkgconf
+          git config --system --add safe.directory '*'
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Builder User
+        run: |
+          useradd -m -G wheel -s /bin/bash builder
+          echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder
+          chmod 0440 /etc/sudoers.d/builder
+          mkdir -p /build/staging
+          chown -R builder:builder /build "$GITHUB_WORKSPACE"
+
+      - name: Staging and Build
+        run: |
+          mkdir -p /build/staging
+
+          # Pull current repository database if available
+          curl -fsSL -o /build/staging/mimicos.db.tar.zst https://github.com/MimicLotus/mimicos-repo/releases/download/latest/mimicos.db.tar.zst || true
+          curl -fsSL -o /build/staging/mimicos.files.tar.zst https://github.com/MimicLotus/mimicos-repo/releases/download/latest/mimicos.files.tar.zst || true
+
+          # Pre-fetch existing packages so previous builds are preserved
+          curl -fsSL https://api.github.com/repos/MimicLotus/mimicos-repo/releases/latest | \
+            jq -r '.assets[]?.browser_download_url // empty' | \
+            while read -r url; do
+              if [ -n "$url" ] && [ "$url" != "null" ]; then
+                fname=$(basename "$url")
+                echo ":: Pre-fetching existing asset: $fname"
+                curl -fsSL -o "/build/staging/$fname" "$url" || true
+              fi
+            done
+
+          chown -R builder:builder /build "$GITHUB_WORKSPACE"
+
+          # Build each package recipe inside packages/*
+          # Component packages built first, meta-packages last
+          for pkg_dir in packages/*; do
+            [ -d "$pkg_dir" ] || continue
+            pkg_name=$(basename "$pkg_dir")
+            [ "$pkg_name" = "mimicos-desktop" ] && continue
+
+            echo ":: Building package $pkg_name..."
+            (
+              cd "$pkg_dir"
+              sudo -u builder makepkg -sf --noconfirm --clean
+            )
+            cp -vf "$pkg_dir"/*.pkg.tar.zst /build/staging/ 2>/dev/null || true
+            pacman -U --noconfirm --nodeps /build/staging/*.pkg.tar.zst 2>/dev/null || true
+          done
+
+          # Build flagship meta-package
+          if [ -d "packages/mimicos-desktop" ]; then
+            echo ":: Building meta-package mimicos-desktop..."
+            (
+              cd packages/mimicos-desktop
+              sudo -u builder makepkg -sf --noconfirm --clean
+            )
+            cp -vf packages/mimicos-desktop/*.pkg.tar.zst /build/staging/ 2>/dev/null || true
+          fi
+
+          # Update repository database
+          cd /build/staging
+          repo-add -n -R mimicos.db.tar.zst *.pkg.tar.zst
+
+          # Ensure .db and .files are real files for direct HTTP access
+          cp -f mimicos.db.tar.zst mimicos.db
+          cp -f mimicos.files.tar.zst mimicos.files
+
+      - name: Release Deployment
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: "👑 MimicOS Rolling Binary Repository"
+          files: /build/staging/*
+          token: ${{ secrets.GITHUB_TOKEN }}
