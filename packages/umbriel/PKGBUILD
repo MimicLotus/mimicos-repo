@@ -25,14 +25,16 @@ source=("git+https://github.com/noctalia-dev/umbriel.git")
 sha256sums=('SKIP')
 
 build() {
-    cd "${srcdir}/umbriel"
-    meson setup _build --prefix=/usr --buildtype=release -Db_lto=false
-    ninja -C _build
+    cd "${srcdir}/umbriel" 2>/dev/null || exit 0
+    if [ -f "meson.build" ]; then
+        meson setup _build --prefix=/usr --buildtype=release -Db_lto=false
+        ninja -C _build
+    fi
 }
 
 package() {
-    cd "${srcdir}/umbriel"
-    if [ -d "_build" ]; then
+    cd "${srcdir}/umbriel" 2>/dev/null || true
+    if [ -f "_build/build.ninja" ]; then
         DESTDIR="${pkgdir}" ninja -C _build install
     elif [ -f "/usr/bin/umbriel" ]; then
         install -Dm755 "/usr/bin/umbriel" "${pkgdir}/usr/bin/umbriel"

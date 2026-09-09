@@ -6,7 +6,8 @@ pkgrel=1
 arch=('x86_64')
 url="https://github.com/MimicLotus/mimic-core"
 license=('GPL-3.0-or-later')
-makedepends=('cargo' 'rust' 'git' 'openssl' 'libalpm')
+depends=('glibc' 'gcc-libs' 'openssl' 'zstd')
+makedepends=('cargo' 'rust' 'git' 'openssl' 'libalpm' 'zstd')
 source=("git+https://github.com/MimicLotus/mimic-core.git")
 sha256sums=('SKIP')
 
@@ -16,13 +17,14 @@ prepare() {
 
 build() {
     cd "${srcdir}/mimic-core"
-    export RUSTFLAGS="-C target-cpu=native -C opt-level=3"
-    cargo build --release --locked --workspace
+    if [ ! -f "target/release/mimic" ] || [ ! -f "target/release/mimic-brain" ]; then
+        RUSTFLAGS="-C link-arg=-Wl,--no-as-needed -C link-arg=-lzstd" cargo build --release --locked --workspace
+    fi
 }
 
 package_mimic() {
     pkgdesc="👑 Unified Package Engine & Hermetic Builder for Arch Linux"
-    depends=('bubblewrap' 'sccache' 'mold' 'libalpm.so=16' 'openssl' 'glibc' 'gcc-libs')
+    depends=('bubblewrap' 'sccache' 'mold' 'libalpm.so=16' 'openssl' 'glibc' 'gcc-libs' 'zstd')
     provides=('aur-helper' 'makepkg')
     conflicts=('mimic-git')
 

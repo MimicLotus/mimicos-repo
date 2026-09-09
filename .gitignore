@@ -3,3 +3,8 @@
 *.pkg.tar.*
 *.db*
 *.files*
+src/
+pkg/
+release-staging/
+**/src/
+**/pkg/

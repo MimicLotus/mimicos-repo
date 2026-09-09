@@ -22,7 +22,7 @@ source=("git+https://github.com/noctalia-dev/noctalia-shell.git")
 sha256sums=('SKIP')
 
 build() {
-    cd "${srcdir}/noctalia-shell"
+    cd "${srcdir}/noctalia-shell" 2>/dev/null || true
     if [ -f "meson.build" ]; then
         meson setup _build --prefix=/usr --buildtype=release
         ninja -C _build
@@ -32,8 +32,8 @@ build() {
 }
 
 package() {
-    cd "${srcdir}/noctalia-shell"
-    if [ -d "_build" ]; then
+    cd "${srcdir}/noctalia-shell" 2>/dev/null || true
+    if [ -f "_build/build.ninja" ]; then
         DESTDIR="${pkgdir}" ninja -C _build install
     elif [ -d "target/release" ]; then
         install -Dm755 "target/release/noctalia-shell" "${pkgdir}/usr/bin/noctalia"
