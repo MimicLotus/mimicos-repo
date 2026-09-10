@@ -1,0 +1,17 @@
+# Maintainer: Mimic Lotus <dev@mimicos.org>
+pkgname=mimicos-wallpapers
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Extended curated high-resolution wallpaper collection for MimicOS"
+arch=('any')
+url="https://github.com/MimicLotus/mimicos-repo"
+license=('GPL-3.0-or-later')
+source=()
+
+package() {
+    cd "${startdir:-${srcdir}/..}" || exit 1
+
+    install -dm755 "${pkgdir}/usr/share/backgrounds/mimicos"
+    cp -r assets/wallpapers/* "${pkgdir}/usr/share/backgrounds/mimicos/"
+    chmod 644 "${pkgdir}/usr/share/backgrounds/mimicos"/*
+}

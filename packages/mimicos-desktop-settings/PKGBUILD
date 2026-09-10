@@ -32,11 +32,11 @@ package() {
     install -Dm755 "bin/mimicos-sync-sddm-wallpaper" "${pkgdir}/usr/bin/mimicos-sync-sddm-wallpaper"
 
     # 5. Install sudoers rule for passwordless SDDM wallpaper synchronization
-    install -Dm440 "system/sudoers.d/10-mimicos-sddm-wallpaper" "${pkgdir}/etc/sudoers.d/10-mimicos-sddm-wallpaper"
+    install -Dm440 "system/sudoers.d/99-mimicos-sddm-sync" "${pkgdir}/etc/sudoers.d/99-mimicos-sddm-sync"
 
     # 6. Install Plymouth splash theme and configuration
     install -dm755 "${pkgdir}/usr/share/plymouth/themes/mimicos"
-    cp -r assets/plymouth/mimicos/* "${pkgdir}/usr/share/plymouth/themes/mimicos/"
+    cp -r assets/plymouth/themes/mimicos/* "${pkgdir}/usr/share/plymouth/themes/mimicos/"
     install -Dm644 "system/plymouthd.conf" "${pkgdir}/etc/plymouth/plymouthd.conf"
 
     # 7. Seed default wallpaper for system and SDDM

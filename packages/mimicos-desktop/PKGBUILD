@@ -1,7 +1,7 @@
 # Maintainer: Mimic Lotus <dev@mimicos.org>
 pkgname=mimicos-desktop
 pkgver=1.0.0
-pkgrel=2
+pkgrel=3
 pkgdesc="👑 Flagship Desktop Environment Meta-Package for MimicOS (Umbriel + Noctalia Shell)"
 arch=('any')
 url="https://github.com/MimicLotus/mimicos-repo"
@@ -28,6 +28,9 @@ depends=(
     'xdg-desktop-portal'
     'xdg-desktop-portal-wlr'
     'polkit'
+)
+optdepends=(
+    'mimicos-wallpapers: Extended high-resolution MimicOS wallpaper collection'
 )
 source=()
 

@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3840 2160" width="3840" height="2160">
+  <defs>
+    <!-- Background Space Gradients -->
+    <radialGradient id="spaceVoid" cx="50%" cy="50%" r="80%">
+      <stop offset="0%" stop-color="#02140d" />
+      <stop offset="45%" stop-color="#010a07" />
+      <stop offset="100%" stop-color="#000302" />
+    </radialGradient>
+
+    <!-- Nebula Cloud Gradients -->
+    <radialGradient id="nebulaCore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#059669" stop-opacity="0.35" />
+      <stop offset="40%" stop-color="#024e37" stop-opacity="0.2" />
+      <stop offset="80%" stop-color="#011f16" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="nebulaSwirlLeft" cx="30%" cy="40%" r="45%">
+      <stop offset="0%" stop-color="#00ff87" stop-opacity="0.12" />
+      <stop offset="50%" stop-color="#047857" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="nebulaSwirlRight" cx="70%" cy="60%" r="50%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.15" />
+      <stop offset="60%" stop-color="#064e3b" stop-opacity="0.06" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Crown Wireframe Vertical Gradient -->
+    <linearGradient id="crownGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#5AFFA5" stop-opacity="1" />
+      <stop offset="35%" stop-color="#00D26A" stop-opacity="0.95" />
+      <stop offset="75%" stop-color="#059669" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#024E37" stop-opacity="0.75" />
+    </linearGradient>
+
+    <!-- Vertex Node Radial Glow -->
+    <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="30%" stop-color="#5AFFA5" />
+      <stop offset="100%" stop-color="#5AFFA5" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Neon Glow Multi-Pass Filter -->
+    <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur1" />
+      <feGaussianBlur stdDeviation="24" result="coloredBlur2" />
+      <feGaussianBlur stdDeviation="56" result="coloredBlur3" />
+      <feMerge>
+        <feMergeNode in="coloredBlur3" />
+        <feMergeNode in="coloredBlur2" />
+        <feMergeNode in="coloredBlur1" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Soft Ambient Core Glow Filter -->
+    <filter id="ambientDiffuse" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="90" />
+    </filter>
+  </defs>
+
+  <!-- Deep Cosmic Canvas -->
+  <rect width="3840" height="2160" fill="url(#spaceVoid)" />
+
+  <!-- Nebula Dust Formations -->
+  <ellipse cx="1920" cy="1080" rx="1400" ry="800" fill="url(#nebulaCore)" filter="url(#ambientDiffuse)" />
+  <ellipse cx="1200" cy="900" rx="1100" ry="650" fill="url(#nebulaSwirlLeft)" filter="url(#ambientDiffuse)" transform="rotate(-15 1200 900)" />
+  <ellipse cx="2600" cy="1200" rx="1200" ry="700" fill="url(#nebulaSwirlRight)" filter="url(#ambientDiffuse)" transform="rotate(20 2600 1200)" />
+
+  <!-- Star Field -->
+  <g fill="#A7F3D0" opacity="0.6">
+    <circle cx="450" cy="320" r="2" opacity="0.5" />
+    <circle cx="890" cy="180" r="1.5" opacity="0.8" />
+    <circle cx="1400" cy="400" r="2.5" opacity="0.4" />
+    <circle cx="2100" cy="220" r="1.5" opacity="0.7" />
+    <circle cx="2950" cy="380" r="2" opacity="0.6" />
+    <circle cx="3400" cy="190" r="3" opacity="0.9" />
+    <circle cx="320" cy="850" r="1.5" opacity="0.4" />
+    <circle cx="780" cy="1200" r="2" opacity="0.7" />
+    <circle cx="3100" cy="950" r="1.5" opacity="0.5" />
+    <circle cx="3550" cy="1300" r="2" opacity="0.8" />
+    <circle cx="500" cy="1800" r="2.5" opacity="0.6" />
+    <circle cx="1100" cy="1650" r="1.5" opacity="0.4" />
+    <circle cx="2700" cy="1750" r="2" opacity="0.7" />
+    <circle cx="3300" cy="1900" r="1.5" opacity="0.5" />
+    <circle cx="1750" cy="1950" r="2" opacity="0.6" />
+  </g>
+
+  <!-- Crown Ambient Central Light Core -->
+  <circle cx="1920" cy="1080" r="240" fill="#00D26A" opacity="0.18" filter="url(#ambientDiffuse)" />
+
+  <!-- Crown Wireframe Vector Group -->
+  <g filter="url(#neonGlow)" stroke="url(#crownGradient)" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    
+    <!-- Base Dual Horizontal Bars -->
+    <line x1="1440" y1="1480" x2="2400" y2="1480" stroke-width="8" />
+    <line x1="1440" y1="1525" x2="2400" y2="1525" stroke-width="8" />
+
+    <!-- Outer Spire Flanks -->
+    <line x1="1180" y1="780" x2="1440" y2="1435" stroke-width="9" />
+    <line x1="2660" y1="780" x2="2400" y2="1435" stroke-width="9" />
+
+    <!-- Center Primary Spire -->
+    <line x1="1920" y1="460" x2="1440" y2="1435" stroke-width="10" />
+    <line x1="1920" y1="460" x2="2400" y2="1435" stroke-width="10" />
+    <line x1="1920" y1="460" x2="1920" y2="1435" stroke-width="7" />
+
+    <!-- Intersecting Kinetic Lattice Lines -->
+    <line x1="1180" y1="780" x2="1920" y2="1060" stroke-width="8.5" />
+    <line x1="2660" y1="780" x2="1920" y2="1060" stroke-width="8.5" />
+    
+    <line x1="1180" y1="780" x2="1920" y2="1435" stroke-width="8" />
+    <line x1="2660" y1="780" x2="1920" y2="1435" stroke-width="8" />
+
+    <!-- Lower Diamond Struts -->
+    <line x1="1440" y1="1435" x2="1920" y2="1060" stroke-width="8" />
+    <line x1="2400" y1="1435" x2="1920" y2="1060" stroke-width="8" />
+    <line x1="1650" y1="1200" x2="2190" y2="1200" stroke-width="7" />
+  </g>
+
+  <!-- High-Luminance Vertex Stars & Nodes -->
+  <g>
+    <!-- Central Apex Node -->
+    <circle cx="1920" cy="460" r="32" fill="url(#nodeGlow)" />
+    <circle cx="1920" cy="460" r="8" fill="#FFFFFF" />
+
+    <!-- Flanking Spires -->
+    <circle cx="1180" cy="780" r="28" fill="url(#nodeGlow)" />
+    <circle cx="1180" cy="780" r="7" fill="#FFFFFF" />
+    <circle cx="2660" cy="780" r="28" fill="url(#nodeGlow)" />
+    <circle cx="2660" cy="780" r="7" fill="#FFFFFF" />
+
+    <!-- Central Diamond Node -->
+    <circle cx="1920" cy="1060" r="30" fill="url(#nodeGlow)" />
+    <circle cx="1920" cy="1060" r="7.5" fill="#FFFFFF" />
+
+    <!-- Base Anchor Nodes -->
+    <circle cx="1440" cy="1435" r="22" fill="url(#nodeGlow)" opacity="0.8" />
+    <circle cx="1440" cy="1435" r="5" fill="#A7F3D0" />
+    <circle cx="2400" cy="1435" r="22" fill="url(#nodeGlow)" opacity="0.8" />
+    <circle cx="2400" cy="1435" r="5" fill="#A7F3D0" />
+    <circle cx="1920" cy="1435" r="20" fill="url(#nodeGlow)" opacity="0.8" />
+    <circle cx="1920" cy="1435" r="4.5" fill="#A7F3D0" />
+  </g>
+</svg>
