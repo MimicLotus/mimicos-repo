@@ -1,0 +1,2 @@
+# MimicOS Passwordless SDDM Wallpaper Synchronization
+%wheel ALL=(ALL) NOPASSWD: /usr/bin/mimicos-sync-sddm-wallpaper

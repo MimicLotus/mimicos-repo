@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=MimicOS Plymouth Theme
+Description=Official Plymouth boot splash with mimic-simple-3 backdrop and crown glow for MimicOS
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/mimicos
+ScriptFile=/usr/share/plymouth/themes/mimicos/mimicos.script

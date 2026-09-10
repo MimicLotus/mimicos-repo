@@ -1,0 +1,11 @@
+NAME="MimicOS Linux"
+PRETTY_NAME="MimicOS Linux (CachyOS Core)"
+ID=mimicos
+ID_LIKE="arch cachyos"
+BUILD_ID=rolling
+ANSI_COLOR="38;2;112;219;168"
+HOME_URL="https://github.com/MimicLotus"
+DOCUMENTATION_URL="https://github.com/MimicLotus/mimicos-repo"
+SUPPORT_URL="https://github.com/MimicLotus/mimicos-repo/issues"
+BUG_REPORT_URL="https://github.com/MimicLotus/mimicos-repo/issues"
+LOGO=mimicos

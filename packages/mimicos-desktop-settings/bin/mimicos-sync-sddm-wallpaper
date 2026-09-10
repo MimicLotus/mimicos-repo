@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+# ═════════════════════════════════════════════════════════════════════
+# 👑 MimicOS SDDM & Wallpaper Dynamic Synchronization Engine
+# ═════════════════════════════════════════════════════════════════════
+
+set -euo pipefail
+
+# Determine caller's real home directory (even if invoked under sudo)
+if [ -n "${SUDO_USER:-}" ]; then
+    REAL_USER="$SUDO_USER"
+    USER_HOME=$(getent passwd "$SUDO_USER" | cut -d: -f6)
+else
+    REAL_USER="${USER:-$(id -un)}"
+    USER_HOME="${HOME:-/home/$REAL_USER}"
+fi
+
+# Determine source wallpaper
+WALLPAPER_SRC="${1:-}"
+
+if [ -z "$WALLPAPER_SRC" ] || [ ! -f "$WALLPAPER_SRC" ]; then
+    if [ -f "$USER_HOME/.config/hypr/wallpaper_effects/.wallpaper_current" ]; then
+        WALLPAPER_SRC="$USER_HOME/.config/hypr/wallpaper_effects/.wallpaper_current"
+    elif [ -f "$USER_HOME/.current_wallpaper" ]; then
+        WALLPAPER_SRC="$USER_HOME/.current_wallpaper"
+    elif [ -f "/usr/share/backgrounds/mimicos/default.jpg" ]; then
+        WALLPAPER_SRC="/usr/share/backgrounds/mimicos/default.jpg"
+    else
+        echo ":: [mimicos-sync-sddm-wallpaper] Error: No wallpaper found." >&2
+        exit 1
+    fi
+fi
+
+echo ":: [mimicos-sync-sddm-wallpaper] Synchronizing SDDM wallpaper: $WALLPAPER_SRC"
+
+# Target directories
+CACHE_DIR="/var/cache/mimicos/wallpaper"
+mkdir -p "$CACHE_DIR" /usr/share/backgrounds/mimicos
+cp -f "$WALLPAPER_SRC" "$CACHE_DIR/current.jpg"
+chmod 644 "$CACHE_DIR/current.jpg"
+cp -f "$WALLPAPER_SRC" "/usr/share/backgrounds/mimicos/current.jpg"
+chmod 644 "/usr/share/backgrounds/mimicos/current.jpg"
+
+# Synchronize known SDDM themes
+THEME_DIRS=(
+    "/usr/share/sddm/themes/simple_sddm_2"
+    "/usr/share/sddm/themes/simple-sddm-2"
+    "/usr/share/sddm/themes/sddm-theme-mimicos"
+    "/usr/share/sddm/themes/mimicos"
+)
+
+for theme_dir in "${THEME_DIRS[@]}"; do
+    if [ -d "$theme_dir" ]; then
+        bg_dir="$theme_dir/Backgrounds"
+        mkdir -p "$bg_dir"
+        cp -f "$WALLPAPER_SRC" "$bg_dir/default" 2>/dev/null || true
+        cp -f "$WALLPAPER_SRC" "$bg_dir/default.jpg" 2>/dev/null || true
+        cp -f "$WALLPAPER_SRC" "$bg_dir/default.png" 2>/dev/null || true
+        cp -f "$WALLPAPER_SRC" "$theme_dir/background.jpg" 2>/dev/null || true
+        cp -f "$WALLPAPER_SRC" "$theme_dir/background.png" 2>/dev/null || true
+        chmod -R a+r "$theme_dir" 2>/dev/null || true
+
+        # Update dynamic colors if Wallust RASI colors exist
+        rofi_wallust="$USER_HOME/.config/rofi/wallust/colors-rofi.rasi"
+        theme_conf="$theme_dir/theme.conf"
+        if [ -f "$rofi_wallust" ] && [ -f "$theme_conf" ]; then
+            color1=$(grep -oP 'color1:\s*\K#[A-Fa-f0-9]+' "$rofi_wallust" | head -n1 || true)
+            color10=$(grep -oP 'color10:\s*\K#[A-Fa-f0-9]+' "$rofi_wallust" | head -n1 || true)
+            color12=$(grep -oP 'color12:\s*\K#[A-Fa-f0-9]+' "$rofi_wallust" | head -n1 || true)
+            color13=$(grep -oP 'color13:\s*\K#[A-Fa-f0-9]+' "$rofi_wallust" | head -n1 || true)
+
+            if [ -n "$color13" ]; then
+                sed -i "s/HeaderTextColor=\".*\"/HeaderTextColor=\"$color13\"/" "$theme_conf" 2>/dev/null || true
+                sed -i "s/DateTextColor=\".*\"/DateTextColor=\"$color13\"/" "$theme_conf" 2>/dev/null || true
+                sed -i "s/TimeTextColor=\".*\"/TimeTextColor=\"$color13\"/" "$theme_conf" 2>/dev/null || true
+            fi
+            if [ -n "$color12" ]; then
+                sed -i "s/HighlightBackgroundColor=\".*\"/HighlightBackgroundColor=\"$color12\"/" "$theme_conf" 2>/dev/null || true
+            fi
+        fi
+    fi
+done
+
+echo ":: [mimicos-sync-sddm-wallpaper] SDDM wallpaper sync complete."

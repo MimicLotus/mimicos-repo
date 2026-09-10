@@ -1,12 +1,12 @@
 # Maintainer: Mimic Lotus <dev@mimicos.org>
 pkgname=mimicos-desktop-settings
 pkgver=1.0.0
-pkgrel=1
-pkgdesc="Modular configurations, skel dotfiles, Wallust integration, and SDDM preset for MimicOS"
+pkgrel=2
+pkgdesc="Modular configurations, skel dotfiles, Plymouth theme, Wallust integration, and SDDM preset for MimicOS"
 arch=('any')
 url="https://github.com/MimicLotus/mimicos-repo"
 license=('GPL-3.0-or-later')
-depends=('alacritty' 'wallust')
+depends=('alacritty' 'wallust' 'fastfetch' 'plymouth')
 optdepends=(
     'umbriel: Wayland scrolling compositor'
     'noctalia-shell: Status bar and desktop shell'
@@ -27,6 +27,23 @@ package() {
     # 3. Install SDDM configuration
     install -Dm644 "system/mimicos.conf" "${pkgdir}/usr/lib/sddm/sddm.conf.d/mimicos.conf"
 
-    # 4. Install theme apply utility
+    # 4. Install binaries and hooks
     install -Dm755 "bin/mimicos-theme-apply" "${pkgdir}/usr/bin/mimicos-theme-apply"
+    install -Dm755 "bin/mimicos-sync-sddm-wallpaper" "${pkgdir}/usr/bin/mimicos-sync-sddm-wallpaper"
+
+    # 5. Install sudoers rule for passwordless SDDM wallpaper synchronization
+    install -Dm440 "system/sudoers.d/10-mimicos-sddm-wallpaper" "${pkgdir}/etc/sudoers.d/10-mimicos-sddm-wallpaper"
+
+    # 6. Install Plymouth splash theme and configuration
+    install -dm755 "${pkgdir}/usr/share/plymouth/themes/mimicos"
+    cp -r assets/plymouth/mimicos/* "${pkgdir}/usr/share/plymouth/themes/mimicos/"
+    install -Dm644 "system/plymouthd.conf" "${pkgdir}/etc/plymouth/plymouthd.conf"
+
+    # 7. Seed default wallpaper for system and SDDM
+    install -Dm644 "assets/wallpapers/default.jpg" "${pkgdir}/usr/share/backgrounds/mimicos/default.jpg"
+    install -Dm644 "assets/wallpapers/default.jpg" "${pkgdir}/usr/share/sddm/themes/simple_sddm_2/Backgrounds/default.jpg"
+    install -Dm644 "assets/wallpapers/default.jpg" "${pkgdir}/usr/share/sddm/themes/simple_sddm_2/Backgrounds/default"
+
+    # 8. OS Identity
+    install -Dm644 "system/os-release" "${pkgdir}/usr/lib/os-release"
 }

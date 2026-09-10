@@ -1,16 +1,19 @@
 # Maintainer: Mimic Lotus <dev@mimicos.org>
 pkgname=mimicos-desktop
 pkgver=1.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="👑 Flagship Desktop Environment Meta-Package for MimicOS (Umbriel + Noctalia Shell)"
 arch=('any')
 url="https://github.com/MimicLotus/mimicos-repo"
 license=('GPL-3.0-or-later')
 depends=(
     'mimic'
+    'mimic-brain'
     'umbriel'
     'noctalia-shell'
     'mimicos-desktop-settings'
+    'plymouth'
+    'fastfetch'
     'sddm'
     'qt6-declarative'
     'qt6-svg'

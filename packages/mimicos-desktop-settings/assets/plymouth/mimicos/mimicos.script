@@ -1,0 +1,61 @@
+# ═══ MimicOS Official Plymouth Boot Splash Script ═══
+
+# Screen dimensions
+screen_width = Window.GetWidth();
+screen_height = Window.GetHeight();
+
+# Load background (mimic-simple-3)
+bg_orig = Image("background.png");
+bg_image = bg_orig.Scale(screen_width, screen_height);
+bg_sprite = Sprite(bg_image);
+bg_sprite.SetPosition(0, 0, -100);
+
+# Load center crown logo
+logo_orig = Image("logo.png");
+logo_scale = 0.25; # Adjust relative size
+logo_width = logo_orig.GetWidth() * logo_scale;
+logo_height = logo_orig.GetHeight() * logo_scale;
+logo_image = logo_orig.Scale(logo_width, logo_height);
+
+logo_sprite = Sprite(logo_image);
+logo_x = (screen_width - logo_width) / 2;
+logo_y = (screen_height - logo_height) / 2 - 20;
+logo_sprite.SetPosition(logo_x, logo_y, 10);
+logo_sprite.SetOpacity(0.0);
+
+# Animation state: Smooth Fade-In & Breathing Pulse
+opacity = 0.0;
+fade_speed = 0.03;
+pulse_phase = 0.0;
+
+fun refresh_callback() {
+    if (opacity < 1.0) {
+        opacity += fade_speed;
+        if (opacity > 1.0) opacity = 1.0;
+        logo_sprite.SetOpacity(opacity);
+    } else {
+        # Gentle breathing glow
+        pulse_phase += 0.05;
+        pulse_opacity = 0.85 + 0.15 * Math.Sin(pulse_phase);
+        logo_sprite.SetOpacity(pulse_opacity);
+    }
+}
+
+Plymouth.SetRefreshFunction(refresh_callback);
+
+# ═══ Password / LUKS Disk Encryption Dialog ═══
+fun display_password_callback(prompt, bullets) {
+    # Handles LUKS disk unlock prompts cleanly
+    prompt_image = Image.Text(prompt, 0.8, 0.9, 0.9);
+    prompt_sprite = Sprite(prompt_image);
+    prompt_sprite.SetPosition((screen_width - prompt_image.GetWidth()) / 2, logo_y + logo_height + 40, 20);
+}
+
+Plymouth.SetDisplayPasswordFunction(display_password_callback);
+
+# Quit callback
+fun quit_callback() {
+    logo_sprite.SetOpacity(0.0);
+}
+
+Plymouth.SetQuitFunction(quit_callback);
