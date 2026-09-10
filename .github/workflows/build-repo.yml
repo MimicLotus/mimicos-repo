@@ -91,7 +91,7 @@ jobs:
 
           # Update repository database
           cd /build/staging
-          repo-add -n -R mimicos.db.tar.zst *.pkg.tar.zst
+          repo-add mimicos.db.tar.zst *.pkg.tar.zst
 
           # Ensure .db and .files are real files for direct HTTP access
           rm -f mimicos.db mimicos.files
